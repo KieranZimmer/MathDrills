@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\draw[xstep=2,ystep=1,color=gray] (0,0) grid (18,10);
+
+\matrix[matrix of nodes,
+inner sep=0pt,
+anchor=south west,
+nodes={inner sep=0pt,text width=2cm,align=center,minimum height=1cm}
+]{

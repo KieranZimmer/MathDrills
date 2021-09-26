@@ -1,0 +1,7 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+\usepackage[margin=0.5in]{geometry}
+
+\begin{document}
