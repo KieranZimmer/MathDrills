@@ -9,7 +9,7 @@ import numpy as np
 
 def add_fraction(f1,f2):
     f3 = (f1[0]*f2[1] + f1[1]*f2[0], f1[1]*f2[1])
-    d = gcf(f2[0],f2[1])
+    d = gcf(f3[0],f3[1])
     if d != 1:
         f3 /= d
         f3 = (int(f3[0]), int(f3[1]))
