@@ -12,13 +12,14 @@ import platform
 import fpdf
 import MultiplicationDrill as multi
 import FractionAdditionDrill as frac
+import DivisionDrill as div
 
 rand_seed = 100
 #multi or frac
-drill_type = "multi"
-drill_type_name = {"multi":"Multiplication", "frac":"Fraction Addition"}
+drill_type = "div"
+drill_type_name = {"multi":"Multiplication", "frac":"Fraction Addition", "div":"Division"}
 drill_name = drill_type_name[drill_type] + " Drill " + str(rand_seed) 
-drill = {"multi":multi, "frac":frac}   
+drill = {"multi":multi, "frac":frac, "div":div}   
 comp_type = "latex"     #build drill through latex or FPDF
 row_len = 8
 col_len = 9
