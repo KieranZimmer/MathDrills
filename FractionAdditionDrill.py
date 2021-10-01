@@ -58,16 +58,21 @@ def gen_fracs_denom(denom, col_size, row_size): #select one fraction for each de
 
     return (col, row)        
 
-def frac_str(f):
+def frac_str_latex(f):
     if f[0] % f[1] == 0:    #for whole numbers
         return str(int(f[0] / f[1]))
     if f[0] > f[1]:         #for improper fractions
         return "$" + str(int(f[0] / f[1])) + "\\frac{" + str(f[0] % f[1]) + "}{" + str(f[1]) + "}$"
     return "$\\frac{" + str(f[0]) + "}{" + str(f[1]) + "}$"  #otherwise
 
-def create_drill(rand_seed):
-    col_size = 9
-    row_size = 8
+def frac_str_fpdf(f):
+    if f[0] % f[1] == 0:    #for whole numbers
+        return str(int(f[0] / f[1]))
+    if f[0] > f[1]:         #for improper fractions
+        return str(int(f[0] / f[1])) + "," + str(f[0] % f[1]) + "/" + str(f[1])
+    return str(f[0]) + "/" + str(f[1])  #otherwise
+
+def gen_latex_strings(rand_seed, col_size = 9, row_size = 8):
     np.random.seed(rand_seed)
     
     #generate index row and column
@@ -81,10 +86,10 @@ def create_drill(rand_seed):
     ans_str = ""
     
     def build_row_str(num):
-        return " & " + frac_str(num)
+        return " & " + frac_str_latex(num)
         
     def build_col_str(num):
-        return frac_str(num) + " \\\\\n"
+        return frac_str_latex(num) + " \\\\\n"
         
     for x in map(build_row_str, row):
         row_str += x
@@ -97,9 +102,24 @@ def create_drill(rand_seed):
     #print(ans)
     
     for i in range(len(col)):
-        ans_str += frac_str(col[i])
+        ans_str += frac_str_latex(col[i])
         for j in ans[i]:
-            ans_str += " & " + frac_str(j)
+            ans_str += " & " + frac_str_latex(j)
         ans_str += " \\\\ "
     
     return (row_str, col_str, ans_str)
+
+def gen_fpdf_strings(rand_seed, col_size = 9, row_size = 8):
+    np.random.seed(rand_seed)
+    
+    #generate index row and column
+    col, row = gen_fracs_rand(col_size + 1, col_size, row_size)
+
+    #calculate answers
+    ans = [[add_fraction(x,y) for x in row] for y in col]
+    
+    row = ['+'] + list(map(frac_str_fpdf, row))
+    col = list(map(frac_str_fpdf, col))
+    ans = [list(map(frac_str_fpdf, x)) for x in ans]
+    
+    return (row, col, ans)
