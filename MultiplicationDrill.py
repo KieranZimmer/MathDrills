@@ -29,10 +29,10 @@ def gen_latex_strings(rand_seed, col_size = 9, row_size = 8):
     ans_str = ""
     
     def build_row_str(num):
-        return " & " + str(num)
+        return " & \\textbf{" + str(num) + "}"
         
     def build_col_str(num):
-        return str(num) + " \\\\\n"
+        return "\\textbf{" + str(num) + "} \\\\\n"
         
     for x in map(build_row_str, row):
         row_str += x
@@ -42,7 +42,7 @@ def gen_latex_strings(rand_seed, col_size = 9, row_size = 8):
         col_str += x
     
     for i in range(len(col)):
-        ans_str += str(col[i])
+        ans_str += "\\textbf{" + str(col[i]) + "}"
         for j in ans[i]:
             ans_str += " & " + str(j)
         ans_str += " \\\\ "

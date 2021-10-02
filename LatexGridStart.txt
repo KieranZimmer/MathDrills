@@ -4,5 +4,5 @@
 \matrix[matrix of nodes,
 inner sep=0pt,
 anchor=south west,
-nodes={inner sep=0pt,text width=2cm,align=center,minimum height=1cm}
+nodes={inner sep=0pt,text width=2cm,align=center,minimum height=1cm,text depth=0.55pt}
 ]{

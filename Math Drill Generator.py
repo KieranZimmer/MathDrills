@@ -10,17 +10,19 @@ import os
 import subprocess
 import platform
 import fpdf
+import tkinter as tk
 import MultiplicationDrill as multi
 import FractionAdditionDrill as frac
 import DivisionDrill as div
 
-rand_seed = 100
+rand_seed = 123
 #multi or frac
 drill_type = "div"
+drill_types = ["multi","frac","div"]
 drill_type_name = {"multi":"Multiplication", "frac":"Fraction Addition", "div":"Division"}
 drill_name = drill_type_name[drill_type] + " Drill " + str(rand_seed) 
 drill = {"multi":multi, "frac":frac, "div":div}   
-comp_type = "latex"     #build drill through latex or FPDF
+comp_type = "pdf"     #build drill through latex or FPDF
 row_len = 8
 col_len = 9
 
@@ -114,5 +116,53 @@ def build_drill(compile_type = "latex"):
         compile_latex()
     elif compile_type == "pdf":
         build_drill_pdf()
+        
+def user_prompt():
+    """
+    User interface for changing drill parameters. Currently supports
+    changing drill seed and drill type.
+    """
+    root = tk.Tk()
     
-build_drill(comp_type)
+    canvas = tk.Canvas(root, width = 400, height = 300)
+    canvas.pack()
+    
+    label1 = tk.Label(root, text="Drill seed (leave blank for random)")
+    entry1 = tk.Entry(root) 
+    canvas.create_window(200, 10, window=label1)
+    canvas.create_window(200, 40, window=entry1)
+    
+    label2 = tk.Label(root, text="Select drill type")
+    
+    var = tk.StringVar(root)
+    var.set(drill_type)
+    dropdown1 = tk.OptionMenu(root, var, *drill_types)
+    
+    canvas.create_window(200,70, window=label2)
+    canvas.create_window(200,100,window=dropdown1)
+    
+    
+    def test_func ():  
+        #build_drill_pdf()
+        x1 = entry1.get()
+        x1 = int(x1) if x1 != '' else np.random.randint(9999999)
+        x2 = var.get()
+        print(x1, x2)
+        global rand_seed
+        global drill_type
+        global drill_name
+        rand_seed = x1
+        drill_type = x2
+        drill_name = drill_type_name[drill_type] + " Drill " + str(rand_seed) 
+        
+        build_drill("pdf")    
+   
+    button1 = tk.Button(text='Use random seed', command=test_func)
+    canvas.create_window(200, 180, window=button1)
+
+    
+
+    root.mainloop()
+    
+#build_drill(comp_type)
+user_prompt()
