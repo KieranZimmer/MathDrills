@@ -9,14 +9,13 @@ import numpy as np
 import os
 import subprocess
 import platform
-import fpdf
+#import fpdf
 import tkinter as tk
 import MultiplicationDrill as multi
 import FractionAdditionDrill as frac
 import DivisionDrill as div
 
 rand_seed = 123
-#multi or frac
 drill_type = "div"
 drill_types = ["multi","frac","div"]
 drill_type_name = {"multi":"Multiplication", "frac":"Fraction Addition", "div":"Division"}
@@ -155,7 +154,7 @@ def user_prompt():
         drill_type = x2
         drill_name = drill_type_name[drill_type] + " Drill " + str(rand_seed) 
         
-        build_drill("pdf")    
+        build_drill("latex")    
    
     button1 = tk.Button(text='Use random seed', command=test_func)
     canvas.create_window(200, 180, window=button1)
