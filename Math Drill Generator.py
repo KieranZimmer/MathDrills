@@ -9,7 +9,7 @@ import numpy as np
 import os
 import subprocess
 import platform
-#import fpdf
+from fpdf import FPDF
 import tkinter as tk
 import MultiplicationDrill as multi
 import FractionAdditionDrill as frac
@@ -133,20 +133,29 @@ def user_prompt():
     
     label2 = tk.Label(root, text="Select drill type")
     
-    var = tk.StringVar(root)
-    var.set(drill_type)
-    dropdown1 = tk.OptionMenu(root, var, *drill_types)
+    var_drill_type = tk.StringVar(root)
+    var_drill_type.set(drill_type)
+    dropdown1 = tk.OptionMenu(root, var_drill_type, *drill_types)
     
     canvas.create_window(200,70, window=label2)
     canvas.create_window(200,100,window=dropdown1)
     
+    var_compile_type = tk.StringVar(root)
+    var_compile_type.set(comp_type)
     
-    def test_func ():  
+    R1 = tk.Radiobutton(root, text="PDF", variable=var_compile_type, value="pdf")
+    R2 = tk.Radiobutton(root, text="LaTeX", variable=var_compile_type, value="latex")
+    
+    canvas.create_window(170,130,window=R1)
+    canvas.create_window(230,130,window=R2)
+    
+    def gen_drill_with_input():  
         #build_drill_pdf()
         x1 = entry1.get()
         x1 = int(x1) if x1 != '' else np.random.randint(9999999)
-        x2 = var.get()
-        print(x1, x2)
+        x2 = var_drill_type.get()
+        x3 = var_compile_type.get()
+        print(x1, x2, x3)
         global rand_seed
         global drill_type
         global drill_name
@@ -154,9 +163,9 @@ def user_prompt():
         drill_type = x2
         drill_name = drill_type_name[drill_type] + " Drill " + str(rand_seed) 
         
-        build_drill("latex")    
+        build_drill(x3)    
    
-    button1 = tk.Button(text='Use random seed', command=test_func)
+    button1 = tk.Button(text='Use random seed', command=gen_drill_with_input)
     canvas.create_window(200, 180, window=button1)
 
     
