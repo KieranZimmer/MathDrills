@@ -6,6 +6,8 @@ Created on Sat Sep 25 21:02:33 2021
 """
 
 import numpy as np
+from fpdf import FPDF
+from AbstractDrill import AbstractDrill
 
 def add_fraction(f1,f2):
     f3 = (f1[0]*f2[1] + f1[1]*f2[0], f1[1]*f2[1])
@@ -123,3 +125,47 @@ def gen_fpdf_strings(rand_seed, col_size = 9, row_size = 8):
     ans = [list(map(frac_str_fpdf, x)) for x in ans]
     
     return (row, col, ans)
+
+class FractionAdditionDrill(AbstractDrill):
+
+    col_len = 9
+    row_len = 8
+
+    @classmethod
+    def build_drill_pdf(cls, rand_seed, drill_name):
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font('Helvetica', 'B', 16)
+        x_step = 20
+        y_step = 10
+
+        row, col, ans = gen_fpdf_strings(rand_seed)
+
+        # generate drill
+        for cell in row:
+            pdf.cell(x_step, y_step, cell, border=1, align='C')
+        pdf.ln()
+
+        for i in range(cls.col_len):
+            pdf.cell(x_step, y_step, col[i], border=1, align='C')
+            for j in range(cls.row_len):
+                pdf.cell(x_step, y_step, "", border=1)
+            pdf.ln()
+
+        pdf.ln(20)
+        # pdf.add_page()
+
+        # generate drill answers
+        for cell in row:
+            pdf.cell(x_step, y_step, cell, border=1, align='C')
+        pdf.ln()
+
+        for i, ans_row in enumerate(ans):
+            pdf.set_font('Helvetica', 'B', 16)
+            pdf.cell(x_step, y_step, col[i], border=1, align='C')
+            pdf.set_font('Helvetica', '', 16)
+            for ans_cell in ans_row:
+                pdf.cell(x_step, y_step, ans_cell, border=1, align='C')
+            pdf.ln()
+
+        pdf.output(drill_name + ".pdf", 'F')

@@ -11,16 +11,17 @@ import subprocess
 import platform
 from fpdf import FPDF
 import tkinter as tk
-import MultiplicationDrill as multi
-import FractionAdditionDrill as frac
-import DivisionDrill as div
+from MultiplicationDrill import MultiplicationDrill as multi
+from FractionAdditionDrill import FractionAdditionDrill as frac
+from DivisionDrill import DivisionDrill as div
+from SkipCountingDrill import SkipCountingDrill as skip
 
 rand_seed = 123
-drill_type = "div"
-drill_types = ["multi","frac","div"]
-drill_type_name = {"multi":"Multiplication", "frac":"Fraction Addition", "div":"Division"}
+drill_type = "multi"
+drill_types = ["multi","frac","div","skip"]
+drill_type_name = {"multi":"Multiplication", "frac":"Fraction Addition", "div":"Division", "skip":"Skip Counting"}
 drill_name = drill_type_name[drill_type] + " Drill " + str(rand_seed) 
-drill = {"multi":multi, "frac":frac, "div":div}   
+drill = {"multi":multi, "frac":frac, "div":div, "skip":skip}
 comp_type = "pdf"     #build drill through latex or FPDF
 row_len = 8
 col_len = 9
@@ -114,7 +115,7 @@ def build_drill(compile_type = "latex"):
         build_drill_tex()
         compile_latex()
     elif compile_type == "pdf":
-        build_drill_pdf()
+        drill[drill_type].build_drill_pdf(rand_seed, drill_name)
         
 def user_prompt():
     """
@@ -167,8 +168,6 @@ def user_prompt():
    
     button1 = tk.Button(text='Use random seed', command=gen_drill_with_input)
     canvas.create_window(200, 180, window=button1)
-
-    
 
     root.mainloop()
     
