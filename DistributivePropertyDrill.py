@@ -1,5 +1,6 @@
 import numpy as np
 from fpdf import FPDF
+from AbstractDrill import AbstractDrill
 
 class polynomial:
 
@@ -49,24 +50,7 @@ class polynomial:
 def rand_sign():
     return 2 * np.random.randint(2) - 1
 
-# f1 = polynomial([(1,'x'),(1,'')])
-# f2 = polynomial([(1,'x'),(-1,'')])
-# f3 = polynomial([(0,'xxx'),(3,'xx'),(4,'x'),(2,'')])
-# f4 = polynomial([(1,'x'),(1,'a')])
-# f5 = polynomial([(1,'y'),(1,'b')])
-# f6 = polynomial.multiply(f4,f4)
-#
-# print(f1, f2)
-# print(polynomial.multiply(f1,f2))
-# print(polynomial.multiply(f2,f3))
-# print(polynomial.multiply(f4,f5))
-# print(polynomial.multiply(f6,f6))
-
-num_probs = 40
-
-def gen_probs(rand_seed):
-    np.random.seed(rand_seed)
-
+def gen_probs(num_probs):
     probs = []
     ans = []
     for i in range(num_probs):
@@ -77,39 +61,40 @@ def gen_probs(rand_seed):
 
     return (probs, ans)
 
-probs, ans = gen_probs(4)
-print(probs[10][0], probs[10][1], ans[10])
+class DistributivePropertyDrill(AbstractDrill):
+    num_probs = 40
 
-def build_drill_pdf():
-    pdf=FPDF()
-    pdf.add_page()
-    pdf.set_font('Arial','',16)
-    x_step = 90
-    y_step = 10
+    @classmethod
+    def build_drill_pdf(cls, params):
+        pdf=FPDF()
+        np.random.seed(params["rand_seed"])
+        probs, ans = gen_probs(cls.num_probs)
 
-    for i in range(num_probs):
-        pdf.set_font('Courier', 'B', 14)
-        pdf.cell(10, y_step, str(i + 1) + ".")
-        pdf.set_font('Arial', '', 16)
-        pdf.cell(38, y_step, '(' + str(probs[i][0]) + ')(' + str(probs[i][1]) + ')')
-        pdf.cell(50, y_step, '=')
-        if i % 2 == 1:
-            pdf.ln()
+        for loop in range(params["num_drills"]):
+            pdf.add_page()
+            pdf.set_font('Helvetica','',16)
+            x_step = 90
+            y_step = 10
 
-    pdf.add_page()
-    for i in range(num_probs):
-        pdf.set_font('Courier', 'B', 14)
-        pdf.cell(10, y_step, str(i + 1) + ".")
-        pdf.set_font('Arial', '', 16)
-        pdf.cell(38, y_step, '(' + str(probs[i][0]) + ')(' + str(probs[i][1]) + ')')
-        pdf.cell(6, y_step, '=')
-        pdf.set_font('Courier', 'B', 16)
-        pdf.cell(51, y_step, str(ans[i]))
-        if i % 2 == 1:
-            pdf.ln()
+            for i in range(cls.num_probs):
+                pdf.set_font('Courier', 'B', 14)
+                pdf.cell(10, y_step, str(i + 1) + ".")
+                pdf.set_font('Helvetica', '', 16)
+                pdf.cell(38, y_step, '(' + str(probs[i][0]) + ')(' + str(probs[i][1]) + ')')
+                pdf.cell(50, y_step, '=')
+                if i % 2 == 1:
+                    pdf.ln()
 
+            pdf.add_page()
+            for i in range(cls.num_probs):
+                pdf.set_font('Courier', 'B', 14)
+                pdf.cell(10, y_step, str(i + 1) + ".")
+                pdf.set_font('Helvetica', '', 16)
+                pdf.cell(38, y_step, '(' + str(probs[i][0]) + ')(' + str(probs[i][1]) + ')')
+                pdf.cell(6, y_step, '=')
+                pdf.set_font('Courier', 'B', 16)
+                pdf.cell(51, y_step, str(ans[i]))
+                if i % 2 == 1:
+                    pdf.ln()
 
-
-    pdf.output("TestDistrib.pdf",'F')
-
-build_drill_pdf()
+        pdf.output(params["drill_name"] + ".pdf", 'F')

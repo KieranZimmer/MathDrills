@@ -16,13 +16,14 @@ from MultiplicationDrill import MultiplicationDrill as multi
 from FractionAdditionDrill import FractionAdditionDrill as frac
 from DivisionDrill import DivisionDrill as div
 from SkipCountingDrill import SkipCountingDrill as skip
+from DistributivePropertyDrill import DistributivePropertyDrill as distrib
 
 rand_seed = 123
 drill_type = "multi"
 drill_types = AbstractDrill.drill_types
 drill_type_name = AbstractDrill.drill_type_name
-drill_name = drill_type_name[drill_type] + " Drill " + str(rand_seed) 
-drill = {"multi":multi, "frac":frac, "div":div, "skip":skip}
+drill_name = drill_type_name[drill_type] + " Drill " + str(rand_seed)
+drill = {"multi": multi, "frac": frac, "div": div, "skip": skip, "distrib": distrib}
 comp_type = "pdf"     #build drill through latex or FPDF
 row_len = 8
 col_len = 9
