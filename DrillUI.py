@@ -51,7 +51,7 @@ def user_prompt():
         compile_type = var_compile_type.get()
         print(entry3.get(), "\n", entry3.get() == None, entry3.get() == "")
 
-        MathDrillGenerator.build_drill_external(drill_type, compile_type, drill_settings)
+        MathDrillGenerator.build_drill(drill_type, compile_type, drill_settings)
 
     button1 = tk.Button(text='Use random seed', command=gen_drill_with_input)
     canvas.create_window(200, 220, window=button1)
