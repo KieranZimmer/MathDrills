@@ -11,6 +11,7 @@ import subprocess
 import platform
 from fpdf import FPDF
 import tkinter as tk
+from AbstractDrill import AbstractDrill
 from MultiplicationDrill import MultiplicationDrill as multi
 from FractionAdditionDrill import FractionAdditionDrill as frac
 from DivisionDrill import DivisionDrill as div
@@ -18,8 +19,8 @@ from SkipCountingDrill import SkipCountingDrill as skip
 
 rand_seed = 123
 drill_type = "multi"
-drill_types = ["multi","frac","div","skip"]
-drill_type_name = {"multi":"Multiplication", "frac":"Fraction Addition", "div":"Division", "skip":"Skip Counting"}
+drill_types = AbstractDrill.drill_types
+drill_type_name = AbstractDrill.drill_type_name
 drill_name = drill_type_name[drill_type] + " Drill " + str(rand_seed) 
 drill = {"multi":multi, "frac":frac, "div":div, "skip":skip}
 comp_type = "pdf"     #build drill through latex or FPDF
@@ -110,13 +111,31 @@ def build_drill_pdf():
     pdf.output(drill_name + ".pdf",'F')
             
 def build_drill(compile_type = "latex"):
+    """
+    Build drill with parameters passed from user_prompt function in MathDrillGenerator
+    """
     #build drill with latex
     if compile_type == "latex":
         build_drill_tex()
         compile_latex()
     elif compile_type == "pdf":
         drill[drill_type].build_drill_pdf(rand_seed, drill_name)
-        
+
+def build_drill_external(drill_type, compile_type, params):
+    """
+    Build drill with parameters passed in from an external UI function.
+    """
+    #set random seed
+    params["rand_seed"] = int(params["rand_seed"]) if params["rand_seed"] != None else np.random.randint(9999999)
+    params["drill_name"] = drill_type_name[drill_type] + " Drill " + str(rand_seed)  #set drill name
+
+    # build drill with latex
+    if compile_type == "latex":
+        build_drill_tex()
+        compile_latex()
+    elif compile_type == "pdf":
+        drill[drill_type].build_drill_pdf(rand_seed, drill_name)
+
 def user_prompt():
     """
     User interface for changing drill parameters. Currently supports
