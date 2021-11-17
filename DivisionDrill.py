@@ -16,8 +16,7 @@ class DivisionDrill(AbstractDrill):
     row_len = 8
 
     @classmethod
-    def gen_nums(cls,rand_seed, col_len = 9, row_len = 8):
-        np.random.seed(rand_seed)
+    def gen_nums(cls, col_len = 9, row_len = 8):
 
         row = np.random.permutation(np.arange(2,10))
         col = [x[0] * 100 + x[1] * 10 + x[2] for x in np.rot90([x for x in map(np.random.permutation, [list(np.arange(1,10))] * 3)])]
@@ -35,12 +34,12 @@ class DivisionDrill(AbstractDrill):
         return str(div[0]) + ',' + str(div[1])
 
     @classmethod
-    def gen_latex_strings(cls, rand_seed, col_len = 9, row_len = 8):
+    def gen_latex_strings(cls, col_len = 9, row_len = 8):
         """
         Returns three strings, for the drill row, column, and answers, ready to
         be compiled into LaTeX.
         """
-        row, col, ans = cls.gen_nums(rand_seed)
+        row, col, ans = cls.gen_nums()
 
         row_str = "$\\div$"
         col_str = ""
@@ -68,12 +67,12 @@ class DivisionDrill(AbstractDrill):
         return (row_str, col_str, ans_str)
 
     @classmethod
-    def gen_fpdf_strings(cls, rand_seed, col_len = 9, row_len = 8):
+    def gen_fpdf_strings(cls, col_len = 9, row_len = 8):
         """
         Returns three lists of strings, for the drill row, column, and answers,
         ready to be set into a PDF using the FPDF library.
         """
-        row, col, ans = cls.gen_nums(rand_seed)
+        row, col, ans = cls.gen_nums()
 
         row = ['x'] + list(map(str, row))
         col = list(map(str, col))
@@ -82,40 +81,43 @@ class DivisionDrill(AbstractDrill):
         return (row, col, ans)
 
     @classmethod
-    def build_drill_pdf(cls, rand_seed, drill_name):
+    def build_drill_pdf(cls, params):
         pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font('Helvetica', 'B', 16)
-        x_step = 20
-        y_step = 10
+        np.random.seed(params["rand_seed"])
 
-        row, col, ans = cls.gen_fpdf_strings(rand_seed)
-
-        # generate drill
-        for cell in row:
-            pdf.cell(x_step, y_step, cell, border=1, align='C')
-        pdf.ln()
-
-        for i in range(cls.col_len):
-            pdf.cell(x_step, y_step, col[i], border=1, align='C')
-            for j in range(cls.row_len):
-                pdf.cell(x_step, y_step, "", border=1)
-            pdf.ln()
-
-        pdf.ln(20)
-        # pdf.add_page()
-
-        # generate drill answers
-        for cell in row:
-            pdf.cell(x_step, y_step, cell, border=1, align='C')
-        pdf.ln()
-
-        for i, ans_row in enumerate(ans):
+        for loop in range(params["num_drills"]):
+            pdf.add_page()
             pdf.set_font('Helvetica', 'B', 16)
-            pdf.cell(x_step, y_step, col[i], border=1, align='C')
-            pdf.set_font('Helvetica', '', 16)
-            for ans_cell in ans_row:
-                pdf.cell(x_step, y_step, ans_cell, border=1, align='C')
+            x_step = 20
+            y_step = 10
+
+            row, col, ans = cls.gen_fpdf_strings()
+
+            # generate drill
+            for cell in row:
+                pdf.cell(x_step, y_step, cell, border=1, align='C')
             pdf.ln()
 
-        pdf.output(drill_name + ".pdf", 'F')
+            for i in range(cls.col_len):
+                pdf.cell(x_step, y_step, col[i], border=1, align='C')
+                for j in range(cls.row_len):
+                    pdf.cell(x_step, y_step, "", border=1)
+                pdf.ln()
+
+            pdf.ln(20)
+            # pdf.add_page()
+
+            # generate drill answers
+            for cell in row:
+                pdf.cell(x_step, y_step, cell, border=1, align='C')
+            pdf.ln()
+
+            for i, ans_row in enumerate(ans):
+                pdf.set_font('Helvetica', 'B', 16)
+                pdf.cell(x_step, y_step, col[i], border=1, align='C')
+                pdf.set_font('Helvetica', '', 16)
+                for ans_cell in ans_row:
+                    pdf.cell(x_step, y_step, ans_cell, border=1, align='C')
+                pdf.ln()
+
+        pdf.output(params["drill_name"] + ".pdf", 'F')

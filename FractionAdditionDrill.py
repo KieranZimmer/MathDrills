@@ -111,8 +111,7 @@ def gen_latex_strings(rand_seed, col_size = 9, row_size = 8):
     
     return (row_str, col_str, ans_str)
 
-def gen_fpdf_strings(rand_seed, col_size = 9, row_size = 8):
-    np.random.seed(rand_seed)
+def gen_fpdf_strings(col_size = 9, row_size = 8):
     
     #generate index row and column
     col, row = gen_fracs_rand(col_size + 1, col_size, row_size)
@@ -132,40 +131,43 @@ class FractionAdditionDrill(AbstractDrill):
     row_len = 8
 
     @classmethod
-    def build_drill_pdf(cls, rand_seed, drill_name):
+    def build_drill_pdf(cls, params):
         pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font('Helvetica', 'B', 16)
-        x_step = 20
-        y_step = 10
+        np.random.seed(params["rand_seed"])
 
-        row, col, ans = gen_fpdf_strings(rand_seed)
-
-        # generate drill
-        for cell in row:
-            pdf.cell(x_step, y_step, cell, border=1, align='C')
-        pdf.ln()
-
-        for i in range(cls.col_len):
-            pdf.cell(x_step, y_step, col[i], border=1, align='C')
-            for j in range(cls.row_len):
-                pdf.cell(x_step, y_step, "", border=1)
-            pdf.ln()
-
-        pdf.ln(20)
-        # pdf.add_page()
-
-        # generate drill answers
-        for cell in row:
-            pdf.cell(x_step, y_step, cell, border=1, align='C')
-        pdf.ln()
-
-        for i, ans_row in enumerate(ans):
+        for loop in range(params["num_drills"]):
+            pdf.add_page()
             pdf.set_font('Helvetica', 'B', 16)
-            pdf.cell(x_step, y_step, col[i], border=1, align='C')
-            pdf.set_font('Helvetica', '', 16)
-            for ans_cell in ans_row:
-                pdf.cell(x_step, y_step, ans_cell, border=1, align='C')
+            x_step = 20
+            y_step = 10
+
+            row, col, ans = gen_fpdf_strings()
+
+            # generate drill
+            for cell in row:
+                pdf.cell(x_step, y_step, cell, border=1, align='C')
             pdf.ln()
 
-        pdf.output(drill_name + ".pdf", 'F')
+            for i in range(cls.col_len):
+                pdf.cell(x_step, y_step, col[i], border=1, align='C')
+                for j in range(cls.row_len):
+                    pdf.cell(x_step, y_step, "", border=1)
+                pdf.ln()
+
+            pdf.ln(20)
+            # pdf.add_page()
+
+            # generate drill answers
+            for cell in row:
+                pdf.cell(x_step, y_step, cell, border=1, align='C')
+            pdf.ln()
+
+            for i, ans_row in enumerate(ans):
+                pdf.set_font('Helvetica', 'B', 16)
+                pdf.cell(x_step, y_step, col[i], border=1, align='C')
+                pdf.set_font('Helvetica', '', 16)
+                for ans_cell in ans_row:
+                    pdf.cell(x_step, y_step, ans_cell, border=1, align='C')
+                pdf.ln()
+
+        pdf.output(params["drill_name"] + ".pdf", 'F')

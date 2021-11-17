@@ -126,15 +126,17 @@ def build_drill_external(drill_type, compile_type, params):
     Build drill with parameters passed in from an external UI function.
     """
     #set random seed
-    params["rand_seed"] = int(params["rand_seed"]) if params["rand_seed"] != None else np.random.randint(9999999)
-    params["drill_name"] = drill_type_name[drill_type] + " Drill " + str(rand_seed)  #set drill name
+    params["rand_seed"] = int(params["rand_seed"]) if params["rand_seed"] not in (None, '') \
+        else np.random.randint(9999999)
+    params["drill_name"] = drill_type_name[drill_type] + " Drill " + str(params["rand_seed"])  #set drill name
+    params["num_drills"] = int(params["num_drills"]) if params["num_drills"] not in (None, '') else 1
 
     # build drill with latex
     if compile_type == "latex":
         build_drill_tex()
         compile_latex()
     elif compile_type == "pdf":
-        drill[drill_type].build_drill_pdf(rand_seed, drill_name)
+        drill[drill_type].build_drill_pdf(params)
 
 def user_prompt():
     """
@@ -189,6 +191,3 @@ def user_prompt():
     canvas.create_window(200, 180, window=button1)
 
     root.mainloop()
-    
-#build_drill(comp_type)
-user_prompt()
