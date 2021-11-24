@@ -10,19 +10,22 @@ import os
 import subprocess
 import platform
 from AbstractDrill import AbstractDrill
+#These can all be dynamically imported with importlib
 from MultiplicationDrill import MultiplicationDrill as multi
 from FractionAdditionDrill import FractionAdditionDrill as frac
 from DivisionDrill import DivisionDrill as div
 from SkipCountingDrill import SkipCountingDrill as skip
 from DistributivePropertyDrill import DistributivePropertyDrill as distrib
 from MultiplicationTableDrill import MultiplicationTableDrill as multi_tab
+from AdditionTableDrill import AdditionTableDrill as add_tab
 
 rand_seed = 123
 drill_type = "multi"
 drill_types = AbstractDrill.drill_types
 drill_type_name = AbstractDrill.drill_type_name
 drill_name = drill_type_name[drill_type] + ' ' + str(rand_seed)
-drill = {"multi": multi, "frac": frac, "div": div, "skip": skip, "distrib": distrib, "multi_tab": multi_tab}
+drill = {"multi": multi, "frac": frac, "div": div, "skip": skip, "distrib": distrib, "multi_tab": multi_tab,
+         "add_tab": add_tab}
 
 def build_drill_tex():
     """

@@ -2,10 +2,10 @@ from abc import ABC, abstractmethod
 
 
 class AbstractDrill(ABC):
-    drill_types = ["multi", "frac", "div", "skip", "distrib", "multi_tab"]
+    drill_types = ["multi", "frac", "div", "skip", "distrib", "multi_tab", "add_tab"]
     drill_type_name = {"multi": "Multiplication Drill", "frac": "Fraction Addition Drill", "div": "Division Drill",
                        "skip": "Skip Counting Drill", "distrib": "Distributive Property Drill",
-                       "multi_tab": "Multiplication Table Drill"}
+                       "multi_tab": "Multiplication Table Drill", "add_tab": "Addition Table Drill"}
     global_params_list = ["rand_seed", "drill_name", "num_drills"]
 
     #Drill specific parameters
