@@ -22,7 +22,7 @@ def user_prompt():
     canvas.create_window(250, 10, window=label1)
     canvas.create_window(250, 40, window=entry1)
 
-    label3 = tk.Label(root, text="Number of drills to generate")
+    label3 = tk.Label(root, text="Number of drill pages to generate")
     entry3 = tk.Entry(root)
     canvas.create_window(250, 70, window=label3)
     canvas.create_window(250, 100, window=entry3)
