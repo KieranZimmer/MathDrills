@@ -3,11 +3,12 @@ from fpdf import FPDF
 from AbstractDrill import AbstractDrill
 
 class MultiplicationTableDrill(AbstractDrill):
-    drill_param_list = ["rand_ord", "max_num", "inc_one", "inc_ten"]
+    drill_param_list = ["rand_ord", "max_num", "inc_one", "inc_ten", "tri"]
     drill_param_text = {"rand_ord": "Randomize number order in row and column",
                         "max_num": "Maximum number in drill (minimum 9, maximum 17, default 12)",
-                         "inc_one":"Include one?", "inc_ten": "Include 10?"}
-    drill_param_input = {"rand_ord": 0, "max_num": 1, "inc_one": 0, "inc_ten": 0 } #0: binary yes/no, 1: text entry
+                         "inc_one":"Include one?", "inc_ten": "Include 10?", "tri": "Triangular layout"}
+    #0: binary default no, 1: binary default yes, 2: text entry
+    drill_param_input = {"rand_ord": 0, "max_num": 2, "inc_one": 0, "inc_ten": 0, "tri": 1}
 
     @classmethod
     def build_drill_pdf(cls, params):
@@ -21,6 +22,8 @@ class MultiplicationTableDrill(AbstractDrill):
         if max_num - int(not params["inc_one"]) - int(not params["inc_ten"]) > 12:
             orient = 'L'
 
+        tri = params["tri"]
+
         x_step = 15
         y_step = 10
         row = np.arange(max_num) + 1
@@ -33,7 +36,7 @@ class MultiplicationTableDrill(AbstractDrill):
         for loop in range(params["num_drills"]):
             if params["rand_ord"] == 1:  #random order for each drill if parameter is active
                 row = np.random.permutation(row)
-                col = np.random.permutation(col)
+                col = row
 
             pdf.add_page(orient)
             pdf.set_font('Helvetica', '', 16)
@@ -42,10 +45,11 @@ class MultiplicationTableDrill(AbstractDrill):
                 pdf.cell(x_step, y_step, str(r), align='C')
             for i, c in enumerate(col):
                 pdf.ln()
-                for blank in range(i):
-                    pdf.cell(x_step, y_step, '')
+                if tri:
+                    for blank in range(i):
+                        pdf.cell(x_step, y_step, '')
                 pdf.cell(x_step, y_step, str(c), align='C')
-                for cell in range(len(col) - i):
+                for cell in range(len(col) - i * tri):
                     pdf.cell(x_step, y_step, '', border=1)
 
             #print answers on new page
@@ -55,11 +59,12 @@ class MultiplicationTableDrill(AbstractDrill):
                 pdf.cell(x_step, y_step, str(r), align='C')
             for i, c in enumerate(col):
                 pdf.ln()
-                for blank in range(i):
-                    pdf.cell(x_step, y_step, '')
+                if tri:
+                    for blank in range(i):
+                        pdf.cell(x_step, y_step, '')
                 pdf.cell(x_step, y_step, str(c), align='C')
-                for cell in range(len(col) - i):
-                    pdf.cell(x_step, y_step, str(c * row[cell + i]), border=1)
+                for cell in range(len(col) - i * tri):
+                    pdf.cell(x_step, y_step, str(c * row[cell + i * tri]), border=1)
 
         pdf.output(params["drill_name"] + ".pdf", 'F')
 

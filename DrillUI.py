@@ -40,18 +40,19 @@ def user_prompt():
         drill_type = var_drill_type.get()
         drill_cls_name = AbstractDrill.drill_type_name[drill_type].replace(" ","")
         drill_cls = getattr(importlib.import_module(drill_cls_name), drill_cls_name)
-        drill_params = drill_cls.drill_param_list   #should be in try-catch
+        drill_params = drill_cls.drill_param_list
         i = 0
         for param in drill_params:  #still needs to destroy these when it gets changed
             param_text = drill_cls.drill_param_text[param]
             param_input = drill_cls.drill_param_input[param]
-            if param_input == 0:
+            if param_input <= 1:
                 entry_var = tk.IntVar(root)
+                entry_var.set(param_input)
                 check = tk.Checkbutton(root, text=param_text, variable=entry_var)
                 canvas.create_window(250, 250 + 30 * i, tags="specific", window=check)
                 drill_specific_params.append((param, entry_var))
                 i += 1
-            elif param_input == 1:
+            elif param_input == 2:
                 entry = tk.Entry(root)
                 label = tk.Label(root, text=param_text)
                 canvas.create_window(250, 250 + 30 * i, tags="specific", window=label)
