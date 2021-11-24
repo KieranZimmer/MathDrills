@@ -15,13 +15,14 @@ from FractionAdditionDrill import FractionAdditionDrill as frac
 from DivisionDrill import DivisionDrill as div
 from SkipCountingDrill import SkipCountingDrill as skip
 from DistributivePropertyDrill import DistributivePropertyDrill as distrib
+from MultiplicationTableDrill import MultiplicationTableDrill as multi_tab
 
 rand_seed = 123
 drill_type = "multi"
 drill_types = AbstractDrill.drill_types
 drill_type_name = AbstractDrill.drill_type_name
-drill_name = drill_type_name[drill_type] + " Drill " + str(rand_seed)
-drill = {"multi": multi, "frac": frac, "div": div, "skip": skip, "distrib": distrib}
+drill_name = drill_type_name[drill_type] + ' ' + str(rand_seed)
+drill = {"multi": multi, "frac": frac, "div": div, "skip": skip, "distrib": distrib, "multi_tab": multi_tab}
 
 def build_drill_tex():
     """
@@ -73,8 +74,10 @@ def build_drill(drill_type, compile_type, params):
     #set random seed
     params["rand_seed"] = int(params["rand_seed"]) if params["rand_seed"] not in (None, '') \
         else np.random.randint(9999999)
-    params["drill_name"] = drill_type_name[drill_type] + " Drill " + str(params["rand_seed"])  #set drill name
+    params["drill_name"] = drill_type_name[drill_type] + ' ' + str(params["rand_seed"])  #set drill name
     params["num_drills"] = int(params["num_drills"]) if params["num_drills"] not in (None, '') else 1
+
+    #print("MathDrilLGenerator parameters: ", params)
 
     # build drill with latex
     if compile_type == "latex":
