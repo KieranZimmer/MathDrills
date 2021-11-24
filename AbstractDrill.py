@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import importlib
 
 
 class AbstractDrill(ABC):
@@ -22,3 +23,11 @@ class AbstractDrill(ABC):
     @abstractmethod
     def build_drill_tex(cls, params):
         pass
+
+    @classmethod
+    def import_drill(cls, drill_type):
+        """
+        Returns the drill class represented by the drill type name.
+        """
+        drill_cls_name = cls.drill_type_name[drill_type].replace(" ","")
+        return getattr(importlib.import_module(drill_cls_name), drill_cls_name)

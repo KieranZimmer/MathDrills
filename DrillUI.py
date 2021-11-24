@@ -1,6 +1,5 @@
 import tkinter as tk
 import MathDrillGenerator
-import importlib
 from AbstractDrill import AbstractDrill
 
 drill_settings = dict.fromkeys(AbstractDrill.global_params_list)
@@ -38,8 +37,7 @@ def user_prompt():
         drill_specific_params.clear()
 
         drill_type = var_drill_type.get()
-        drill_cls_name = AbstractDrill.drill_type_name[drill_type].replace(" ","")
-        drill_cls = getattr(importlib.import_module(drill_cls_name), drill_cls_name)
+        drill_cls = AbstractDrill.import_drill(drill_type)
         drill_params = drill_cls.drill_param_list
         i = 0
         for param in drill_params:  #still needs to destroy these when it gets changed
