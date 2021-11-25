@@ -3,15 +3,17 @@ import importlib
 
 
 class AbstractDrill(ABC):
-    drill_types = ["multi", "frac", "div", "skip", "distrib", "multi_tab", "add_tab"]
+    drill_types = ["multi", "frac", "div", "skip", "distrib", "multi_tab", "add_tab", "frac_simp"]
     drill_type_name = {"multi": "Multiplication Drill", "frac": "Fraction Addition Drill", "div": "Division Drill",
                        "skip": "Skip Counting Drill", "distrib": "Distributive Property Drill",
-                       "multi_tab": "Multiplication Table Drill", "add_tab": "Addition Table Drill"}
+                       "multi_tab": "Multiplication Table Drill", "add_tab": "Addition Table Drill",
+                       "frac_simp": "Fraction Simplification Drill"}
     global_params_list = ["rand_seed", "drill_name", "num_drills"]
 
     #Drill specific parameters
     drill_param_list = []
     drill_param_text = {}
+    #0: binary default no, 1: binary default yes, 2: text entry
     drill_param_input = {}
 
     @classmethod
