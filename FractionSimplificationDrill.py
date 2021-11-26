@@ -45,7 +45,7 @@ class FractionSimplificationDrill(AbstractDrill):
         np.random.seed(params["rand_seed"])
 
         max_gcd = params["max_gcd"]
-        max_gcd = 12 if max_gcd == '' else max(min(int(max_gcd), 4), 111)
+        max_gcd = 12 if max_gcd == '' else min(max(int(max_gcd), 4), 111)
 
         pdf.set_font('Helvetica', '', 16)
 

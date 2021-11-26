@@ -8,6 +8,8 @@ class AbstractDrill(ABC):
                        "skip": "Skip Counting Drill", "distrib": "Distributive Property Drill",
                        "multi_tab": "Multiplication Table Drill", "add_tab": "Addition Table Drill",
                        "frac_simp": "Fraction Simplification Drill"}
+    drill_type_name_reversed = {v: k for k, v in drill_type_name.items()}
+    drill_names = list(drill_type_name_reversed.keys())
     global_params_list = ["rand_seed", "drill_name", "num_drills"]
 
     #Drill specific parameters

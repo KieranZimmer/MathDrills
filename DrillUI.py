@@ -4,6 +4,7 @@ from AbstractDrill import AbstractDrill
 
 drill_settings = dict.fromkeys(AbstractDrill.global_params_list)
 drill_types = AbstractDrill.drill_types
+drill_names = AbstractDrill.drill_names
 comp_type = "pdf"     #build drill through latex or FPDF
 
 def user_prompt():
@@ -28,15 +29,14 @@ def user_prompt():
 
     label2 = tk.Label(root, text="Select drill type")
 
-    var_drill_type = tk.StringVar(root)
-    #var_drill_type.set(drill_types[0])
+    var_drill_name = tk.StringVar(root)
     drill_specific_params = []
 
     def drill_changed(*args):   #called when the user selects a different drill on the dropdown list
         canvas.delete("specific")   #clear previous drill-specific UI elements
         drill_specific_params.clear()
 
-        drill_type = var_drill_type.get()
+        drill_type = AbstractDrill.drill_type_name_reversed[var_drill_name.get()]
         drill_cls = AbstractDrill.import_drill(drill_type)
         drill_params = drill_cls.drill_param_list
         i = 0
@@ -47,18 +47,18 @@ def user_prompt():
                 entry_var = tk.IntVar(root)
                 entry_var.set(param_input)
                 check = tk.Checkbutton(root, text=param_text, variable=entry_var)
-                canvas.create_window(250, 250 + 30 * i, tags="specific", window=check)
+                canvas.create_window(250, 220 + 30 * i, tags="specific", window=check)
                 drill_specific_params.append((param, entry_var))
                 i += 1
             elif param_input == 2:
                 entry = tk.Entry(root)
                 label = tk.Label(root, text=param_text)
-                canvas.create_window(250, 250 + 30 * i, tags="specific", window=label)
-                canvas.create_window(250, 280 + 30 * i, tags="specific", window=entry)
+                canvas.create_window(250, 220 + 30 * i, tags="specific", window=label)
+                canvas.create_window(250, 250 + 30 * i, tags="specific", window=entry)
                 drill_specific_params.append((param, entry))
                 i+=2
 
-    dropdown1 = tk.OptionMenu(root, var_drill_type, *drill_types, command=drill_changed)
+    dropdown1 = tk.OptionMenu(root, var_drill_name, *drill_names, command=drill_changed)
 
     canvas.create_window(250, 130, window=label2)
     canvas.create_window(250, 160, window=dropdown1)
@@ -75,18 +75,16 @@ def user_prompt():
     def gen_drill_with_input():
         drill_settings["rand_seed"] = entry1.get()
         drill_settings["num_drills"] = entry3.get()
-        drill_type = var_drill_type.get()
+        drill_type = AbstractDrill.drill_type_name_reversed[var_drill_name.get()]
         compile_type = var_compile_type.get()
 
         for param, entry in drill_specific_params:
             drill_settings[param] = entry.get()
 
-        #print("DrillUI parameters: ", drill_settings)
-
         MathDrillGenerator.build_drill(drill_type, compile_type, drill_settings)
 
-    button1 = tk.Button(text='Use random seed', command=gen_drill_with_input)
-    canvas.create_window(250, 220, window=button1)
+    button1 = tk.Button(text='Generate drill', command=gen_drill_with_input)
+    canvas.create_window(250, 470, window=button1)
 
     root.mainloop()
 
