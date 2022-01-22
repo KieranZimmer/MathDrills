@@ -23,7 +23,7 @@ class DivisionDrill(AbstractDrill):
     def gen_nums(cls):
 
         row = np.random.permutation(np.arange(2,10))
-        col = [x[0] * 100 + x[1] * 10 + x[2] for x in np.rot90([x for x in map(np.random.permutation, [list(np.arange(1,10))] * 3)])]
+        col = [x[0] * 100 + x[1] * 10 + x[2] for x in np.rot90([x[0:9] for x in map(np.random.permutation, [list(np.arange(1,10))] + [list(np.arange(0,10))] * 2)])] #generates column in one line
         ans = [[(y//x,y%x) for x in row] for y in col]
 
         return (row, col, ans)
@@ -78,7 +78,7 @@ class DivisionDrill(AbstractDrill):
         """
         row, col, ans = cls.gen_nums()
 
-        row = ['x'] + list(map(str, row))
+        row = ['÷'] + list(map(str, row))
         col = list(map(str, col))
         ans = [list(map(cls.str_div, x)) for x in ans]
 

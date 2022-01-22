@@ -43,20 +43,20 @@ def user_prompt():
         for param in drill_params:  #still needs to destroy these when it gets changed
             param_text = drill_cls.drill_param_text[param]
             param_input = drill_cls.drill_param_input[param]
-            if param_input <= 1:
+            if param_input <= 1:    #binary parameter
                 entry_var = tk.IntVar(root)
                 entry_var.set(param_input)
-                check = tk.Checkbutton(root, text=param_text, variable=entry_var)
+                check = tk.Checkbutton(root, text=param_text, variable=entry_var)   #binary input
                 canvas.create_window(250, 220 + 30 * i, tags="specific", window=check)
                 drill_specific_params.append((param, entry_var))
-                i += 1
-            elif param_input == 2:
-                entry = tk.Entry(root)
+                i += 1  #increase spacing
+            elif param_input == 2:  #text entry parameter
+                entry = tk.Entry(root)  #text input
                 label = tk.Label(root, text=param_text)
                 canvas.create_window(250, 220 + 30 * i, tags="specific", window=label)
                 canvas.create_window(250, 250 + 30 * i, tags="specific", window=entry)
                 drill_specific_params.append((param, entry))
-                i+=2
+                i += 2  #increase spacing
 
     dropdown1 = tk.OptionMenu(root, var_drill_name, *drill_names, command=drill_changed)
 
@@ -83,8 +83,12 @@ def user_prompt():
 
         MathDrillGenerator.build_drill(drill_type, compile_type, drill_settings)
 
+        canvas.delete("success")
+        label = tk.Label(root, text=var_drill_name.get() + " with seed " + entry1.get() + " created successfully.")
+        canvas.create_window(250, 470, tags="success", window=label)
+
     button1 = tk.Button(text='Generate drill', command=gen_drill_with_input)
-    canvas.create_window(250, 470, window=button1)
+    canvas.create_window(250, 440, window=button1)
 
     root.mainloop()
 
