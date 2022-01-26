@@ -28,6 +28,40 @@ def gcf(a,b):
 def coprime(n): #generates a list of numbers coprime with n
     return list(filter(lambda x: (gcf(x,n) == 1), np.arange(1,n)))
 
+def print_frac_pdf(pdf, f, x, y):
+    if f[0] % f[1] == 0:  # for whole numbers
+        pdf.set_font('Helvetica', '', 18)
+        print_str_pdf(pdf, str(f[0] // f[1]), x - 3, y + 3)
+
+    elif f[0] > f[1]:  # for improper fractions
+        flen = max(len(str(f[0] % f[1])), len(str(f[1])))
+        wlen = len(str(f[0] // f[1]))
+        pdf.set_xy(x - flen * 2 - 2, y + 3)
+        pdf.set_font('Helvetica', '', 18)
+        pdf.cell(0.001, 0, str(f[0] // f[1]))
+        pdf.set_font('Helvetica', '', 16)
+        x += wlen * 2
+        pdf.set_xy(x, y)
+        pdf.cell(0.001, 0, str(f[0] % f[1]), align="C")
+        pdf.set_xy(x, y)
+        pdf.cell(0.001, 0, "_" * flen, align="C")
+        pdf.set_xy(x, y + 6)
+        pdf.cell(0.001, 0, str(f[1]), align="C")
+
+    else:
+        pdf.set_font('Helvetica', '', 16)
+        flen = max(len(str(f[0])), len(str(f[1])))
+        pdf.set_xy(x, y)
+        pdf.cell(0.001, 0, str(f[0]), align="C")
+        pdf.set_xy(x, y)
+        pdf.cell(0.001, 0, "_" * flen, align="C")
+        pdf.set_xy(x, y + 6)
+        pdf.cell(0.001, 0, str(f[1]), align="C")
+
+def print_str_pdf(pdf, s, x, y):
+    pdf.set_xy(x,y)
+    pdf.write(0, s)
+
 def gen_fracs_rand(denom, col_size, row_size): #select random fractions from list
     """
     Generates index row and column by randomly picking from list of possible
@@ -125,6 +159,15 @@ def gen_fpdf_strings(col_size = 9, row_size = 8):
     
     return (row, col, ans)
 
+def gen_drill_data(col_size = 9, row_size = 8):
+    #generate index row and column
+    col, row = gen_fracs_rand(col_size + 1, col_size, row_size)
+
+    #calculate answers
+    ans = [[add_fraction(x,y) for x in row] for y in col]
+
+    return row, col, ans
+
 class FractionAdditionDrill(AbstractDrill):
 
     col_len = 9
@@ -139,35 +182,62 @@ class FractionAdditionDrill(AbstractDrill):
             pdf.add_page()
             pdf.set_font('Helvetica', 'B', 16)
             x_step = 20
-            y_step = 10
+            y_step = 15
 
-            row, col, ans = gen_fpdf_strings()
+            row, col, ans = gen_drill_data()
+
+            x = x_origin = pdf.get_x()
+            y = y_origin = pdf.get_y()
 
             # generate drill
+            pdf.cell(x_step, y_step, "+", border=1, align='C')
+            x += x_step
+
             for cell in row:
-                pdf.cell(x_step, y_step, cell, border=1, align='C')
-            pdf.ln()
+                pdf.cell(x_step, y_step, "", border=1, align='C')
+                print_frac_pdf(pdf, cell, x + x_step / 2, y + 5)
+                x += x_step
+                pdf.set_xy(x, y)
+
+            pdf.set_xy(x_origin, y + y_step)
 
             for i in range(cls.col_len):
-                pdf.cell(x_step, y_step, col[i], border=1, align='C')
+                y += y_step
+                pdf.cell(x_step, y_step, "", border=1, align='C')
+                print_frac_pdf(pdf, col[i], x_origin + x_step / 2, y + 5)
+                pdf.set_xy(x_origin + x_step, y)
                 for j in range(cls.row_len):
                     pdf.cell(x_step, y_step, "", border=1)
                 pdf.ln()
 
-            pdf.ln(20)
-            # pdf.add_page()
+            pdf.add_page()
 
             # generate drill answers
+            pdf.cell(x_step, y_step, "+", border=1, align='C')
+            x = x_origin + x_step
+            y = y_origin
+
             for cell in row:
-                pdf.cell(x_step, y_step, cell, border=1, align='C')
-            pdf.ln()
+                pdf.cell(x_step, y_step, "", border=1, align='C')
+                print_frac_pdf(pdf, cell, x + x_step / 2, y + 5)
+                x += x_step
+                pdf.set_xy(x, y)
+
+            pdf.set_xy(x_origin, y + y_step)
 
             for i, ans_row in enumerate(ans):
+                x = x_origin
+                y += y_step
+                pdf.set_xy(x,y)
                 pdf.set_font('Helvetica', 'B', 16)
-                pdf.cell(x_step, y_step, col[i], border=1, align='C')
+                pdf.cell(x_step, y_step, "", border=1, align='C')
+                print_frac_pdf(pdf, col[i], x + x_step / 2, y + 5)
                 pdf.set_font('Helvetica', '', 16)
+
                 for ans_cell in ans_row:
-                    pdf.cell(x_step, y_step, ans_cell, border=1, align='C')
-                pdf.ln()
+                    x += x_step
+                    pdf.set_xy(x,y)
+                    pdf.cell(x_step, y_step, "", border=1, align='C')
+                    print_frac_pdf(pdf, ans_cell, x + x_step / 2, y + 5)
 
         pdf.output(params["drill_name"] + ".pdf", 'F')
