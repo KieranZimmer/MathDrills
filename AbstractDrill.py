@@ -7,7 +7,8 @@ class AbstractDrill(ABC):
     drill_type_name = {"multi": "Multiplication Drill", "frac": "Fraction Addition Drill", "div": "Division Drill",
                        "skip": "Skip Counting Drill", "distrib": "Distributive Property Drill",
                        "multi_tab": "Multiplication Table Drill", "add_tab": "Addition Table Drill",
-                       "frac_simp": "Fraction Simplification Drill", "dec_ex": "Decimal Expansion Drill"}
+                       "frac_simp": "Fraction Simplification Drill", "dec_ex": "Decimal Expansion Drill",
+                       "pct": "Percentage Drill"}
     drill_type_name_reversed = {v: k for k, v in drill_type_name.items()} #invert above dict
     drill_names = list(drill_type_name_reversed.keys()) #list of all drill names
     global_params_list = ["rand_seed", "drill_name", "num_drills"] #input parameters general to all drill types
