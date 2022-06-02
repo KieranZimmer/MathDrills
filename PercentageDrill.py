@@ -37,6 +37,7 @@ class PercentageDrill(AbstractDrill):
 
         # advanced: percent more, percent less
 
+        # numbers represent a, b, and c
         q_text = [[["What number is ", 2, "% of ", 1, "?"], ["", 2, "% of ", 1, " is what number?"]],
                   [["What percent of ", 1, " is ", 0, "?"], ["", 0, " is what percent of ", 1, "?"]],
                   [["", 0, " is ", 2, "% of what number?"], ["", 2, "% of what number is ", 0, "?"]]]
@@ -64,7 +65,7 @@ class PercentageDrill(AbstractDrill):
                 pdf.cell(15, y_step, str(i + 1) + ".")
                 pdf.set_font('Helvetica', '', 16)
                 if q_type[i] == 0:
-                    pdf.cell(x_step, y_step, q_text[q_type[i]][q_text_type[i]][0]
+                    pdf.cell(x_step, y_step, q_text[q_type[i]][q_text_type[i]][0]  #question text
                              + str(nums[i][q_text[q_type[i]][q_text_type[i]][1]]) + q_text[q_type[i]][q_text_type[i]][2]
                              + str(nums[i][q_text[q_type[i]][q_text_type[i]][3]]) + q_text[q_type[i]][q_text_type[i]][4])
                     pdf.set_font('Helvetica', 'U', 16)  #underline for answer space
